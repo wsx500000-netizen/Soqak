@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shop/route/route_constants.dart';
 import 'package:shop/route/router.dart' as router;
+import 'package:shop/services/marketplace_state.dart';
 import 'package:shop/theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MarketplaceScope(
+    notifier: MarketplaceState(),
+    child: const MyApp(),
+  ));
 }
 
 // Thanks for using our template. You are using the free version of the template.

@@ -45,14 +45,21 @@ class _EntryPointState extends State<EntryPoint> {
         leading: const SizedBox(),
         leadingWidth: 0,
         centerTitle: false,
-        title: SvgPicture.asset(
-          "assets/logo/Shoplon.svg",
-          colorFilter: ColorFilter.mode(
-              Theme.of(context).iconTheme.color!, BlendMode.srcIn),
-          height: 20,
-          width: 100,
+        title: const Text(
+          'سوقك',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: 20,
+          ),
         ),
         actions: [
+          IconButton(
+            tooltip: 'إضافة إعلان',
+            onPressed: () {
+              Navigator.pushNamed(context, addListingScreenRoute);
+            },
+            icon: const Icon(Icons.add_circle_outline),
+          ),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, searchScreenRoute);

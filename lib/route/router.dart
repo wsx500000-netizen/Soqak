@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop/entry_point.dart';
+import 'package:shop/screens/marketplace/add_listing_screen.dart';
+import 'package:shop/screens/marketplace/chat_screen.dart';
 
 import 'screen_export.dart';
 
@@ -64,6 +66,14 @@ import 'screen_export.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
+    case addListingScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const AddListingScreen(),
+      );
+    case chatScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const ChatScreen(),
+      );
     case onbordingScreenRoute:
       return MaterialPageRoute(
         builder: (context) => const OnBordingScreen(),

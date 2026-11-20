@@ -55,6 +55,20 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
           ProfileMenuListTile(
+            text: "إعلاناتي",
+            svgSrc: "assets/icons/Product.svg",
+            press: () {
+              Navigator.pushNamed(context, addListingScreenRoute);
+            },
+          ),
+          ProfileMenuListTile(
+            text: "المحادثات",
+            svgSrc: "assets/icons/Chat.svg",
+            press: () {
+              Navigator.pushNamed(context, chatScreenRoute);
+            },
+          ),
+          ProfileMenuListTile(
             text: "المرتجعات",
             svgSrc: "assets/icons/Return.svg",
             press: () {},

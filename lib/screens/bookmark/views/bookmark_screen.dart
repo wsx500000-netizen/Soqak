@@ -1,51 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:shop/components/product/product_card.dart';
-import 'package:shop/models/product_model.dart';
-import 'package:shop/route/route_constants.dart';
-
-import '../../../constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shop/services/marketplace_state.dart';
 
 class BookmarkScreen extends StatelessWidget {
   const BookmarkScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final state = MarketplaceScope.of(context);
+    final favorites = state.favorites;
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // While loading use 👇
-          //  BookMarksSlelton(),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: defaultPadding, vertical: defaultPadding),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisSpacing: defaultPadding,
-                crossAxisSpacing: defaultPadding,
-                childAspectRatio: 0.66,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return ProductCard(
-                    image: demoPopularProducts[index].image,
-                    brandName: demoPopularProducts[index].brandName,
-                    title: demoPopularProducts[index].title,
-                    price: demoPopularProducts[index].price,
-                    priceAfetDiscount:
-                        demoPopularProducts[index].priceAfetDiscount,
-                    dicountpercent: demoPopularProducts[index].dicountpercent,
-                    press: () {
-                      Navigator.pushNamed(context, productDetailsScreenRoute);
-                    },
-                  );
-                },
-                childCount: demoPopularProducts.length,
-              ),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text('المفضلة'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
       ),
+      body: favorites.isEmpty
+          ? const Center(child: Text('لم تحفظ أي إعلانات بعد'))
+          : GridView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: favorites.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 0.72,
+              ),
+              itemBuilder: (context, index) {
+                final listing = favorites[index];
+                return Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: const Color(0xFFE8E8E8)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: listing.imageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                            Positioned(
+                              left: 6,
+                              top: 6,
+                              child: IconButton.filled(
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () =>
+                                    state.toggleFavorite(listing.id),
+                                icon: const Icon(Icons.favorite,
+                                    color: Colors.red),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${listing.price} ر.س',
+                              style: const TextStyle(
+                                  color: Color(0xFF075E54),
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            Text(
+                              listing.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
     );
   }
 }
