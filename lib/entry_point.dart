@@ -45,12 +45,14 @@ class _EntryPointState extends State<EntryPoint> {
         leading: const SizedBox(),
         leadingWidth: 0,
         centerTitle: false,
-        title: const Text(
-          'سوقك',
-          style: TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 20,
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              'assets/logo/soqak_logo.svg',
+              height: 34,
+            ),
+          ],
         ),
         actions: [
           IconButton(

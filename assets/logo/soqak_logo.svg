@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="48" viewBox="0 0 180 48">
+  <g fill="none" fill-rule="evenodd">
+    <rect width="48" height="48" rx="14" fill="#075E54"/>
+    <path d="M14 18h20l-2.2 17H16.2L14 18Z" fill="#FFFFFF"/>
+    <path d="M19 18c0-5.2 3.1-8 5.9-8 2.9 0 5.9 2.8 5.9 8" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="21" cy="31" r="1.8" fill="#075E54"/>
+    <circle cx="27.5" cy="31" r="1.8" fill="#075E54"/>
+  </g>
+  <text x="60" y="33" fill="#075E54" font-family="Arial, sans-serif" font-size="29" font-weight="700">سوقك</text>
+</svg>
