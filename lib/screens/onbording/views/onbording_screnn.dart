@@ -20,36 +20,36 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
     Onbord(
       image: "assets/Illustration/Illustration-0.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_0.png",
-      title: "Find the item you’ve \nbeen looking for",
+      title: "اعثر على ما \nتبحث عنه",
       description:
-          "Here you’ll see rich varieties of goods, carefully classified for seamless browsing experience.",
+          "اكتشف مجموعة واسعة من المنتجات المصنفة بعناية لتسهيل تجربة التسوق.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-1.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_1.png",
-      title: "Get those shopping \nbags filled",
+      title: "املأ حقيبة \nالتسوق",
       description:
-          "Add any item you want to your cart, or save it on your wishlist, so you don’t miss it in your future purchases.",
+          "أضف أي منتج إلى سلتك أو احفظه في المفضلة حتى لا تفوته.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-2.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_2.png",
-      title: "Fast & secure \npayment",
-      description: "There are many payment options available for your ease.",
+      title: "دفع سريع وآمن",
+      description: "نوفر لك عدة خيارات دفع سهلة وآمنة.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-3.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_3.png",
-      title: "Package tracking",
+      title: "تتبع الطلبات",
       description:
-          "In particular, Shoplon can pack your orders, and help you seamlessly manage your shipments.",
+          "تتبع طلباتك وشحناتك بكل سهولة في أي وقت.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-4.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_4.png",
-      title: "Nearby stores",
+      title: "المتاجر القريبة",
       description:
-          "Easily track nearby shops, browse through their items and get information about their prodcuts.",
+          "اعثر على المتاجر القريبة وتصفح منتجاتها واحصل على المعلومات بسهولة.",
     ),
   ];
 
@@ -80,7 +80,7 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
                     Navigator.pushNamed(context, logInScreenRoute);
                   },
                   child: Text(
-                    "Skip",
+                    "تخطي",
                     style: TextStyle(
                         color: Theme.of(context).textTheme.bodyLarge!.color),
                   ),

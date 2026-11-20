@@ -19,7 +19,7 @@ class BestSellers extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(defaultPadding),
           child: Text(
-            "Best sellers",
+            "الأكثر مبيعاً",
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ),

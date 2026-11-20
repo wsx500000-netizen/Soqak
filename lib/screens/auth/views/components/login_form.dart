@@ -25,7 +25,7 @@ class LogInForm extends StatelessWidget {
             textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              hintText: "Email address",
+              hintText: "البريد الإلكتروني",
               prefixIcon: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: defaultPadding * 0.75),
@@ -52,7 +52,7 @@ class LogInForm extends StatelessWidget {
             validator: passwordValidator.call,
             obscureText: true,
             decoration: InputDecoration(
-              hintText: "Password",
+              hintText: "كلمة المرور",
               prefixIcon: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: defaultPadding * 0.75),

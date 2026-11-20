@@ -12,48 +12,48 @@ class CategoryModel {
 }
 
 final List<CategoryModel> demoCategoriesWithImage = [
-  CategoryModel(title: "Woman’s", image: "https://i.imgur.com/5M89G2P.png"),
-  CategoryModel(title: "Man’s", image: "https://i.imgur.com/UM3GdWg.png"),
-  CategoryModel(title: "Kid’s", image: "https://i.imgur.com/Lp0D6k5.png"),
-  CategoryModel(title: "Accessories", image: "https://i.imgur.com/3mSE5sN.png"),
+  CategoryModel(title: "نساء", image: "https://i.imgur.com/5M89G2P.png"),
+  CategoryModel(title: "رجال", image: "https://i.imgur.com/UM3GdWg.png"),
+  CategoryModel(title: "أطفال", image: "https://i.imgur.com/Lp0D6k5.png"),
+  CategoryModel(title: "إكسسوارات", image: "https://i.imgur.com/3mSE5sN.png"),
 ];
 
 final List<CategoryModel> demoCategories = [
   CategoryModel(
-    title: "On sale",
+    title: "العروض",
     svgSrc: "assets/icons/Sale.svg",
     subCategories: [
-      CategoryModel(title: "All Clothing"),
-      CategoryModel(title: "New In"),
-      CategoryModel(title: "Coats & Jackets"),
-      CategoryModel(title: "Dresses"),
-      CategoryModel(title: "Jeans"),
+      CategoryModel(title: "كل الملابس"),
+      CategoryModel(title: "وصل حديثاً"),
+      CategoryModel(title: "معاطف وجاكيتات"),
+      CategoryModel(title: "فساتين"),
+      CategoryModel(title: "جينز"),
     ],
   ),
   CategoryModel(
-    title: "Man’s & Woman’s",
+    title: "رجال ونساء",
     svgSrc: "assets/icons/Man&Woman.svg",
     subCategories: [
-      CategoryModel(title: "All Clothing"),
-      CategoryModel(title: "New In"),
-      CategoryModel(title: "Coats & Jackets"),
+      CategoryModel(title: "كل الملابس"),
+      CategoryModel(title: "وصل حديثاً"),
+      CategoryModel(title: "معاطف وجاكيتات"),
     ],
   ),
   CategoryModel(
-    title: "Kids",
+    title: "أطفال",
     svgSrc: "assets/icons/Child.svg",
     subCategories: [
-      CategoryModel(title: "All Clothing"),
-      CategoryModel(title: "New In"),
-      CategoryModel(title: "Coats & Jackets"),
+      CategoryModel(title: "كل الملابس"),
+      CategoryModel(title: "وصل حديثاً"),
+      CategoryModel(title: "معاطف وجاكيتات"),
     ],
   ),
   CategoryModel(
-    title: "Accessories",
+    title: "إكسسوارات",
     svgSrc: "assets/icons/Accessories.svg",
     subCategories: [
-      CategoryModel(title: "All Clothing"),
-      CategoryModel(title: "New In"),
+      CategoryModel(title: "كل الإكسسوارات"),
+      CategoryModel(title: "وصل حديثاً"),
     ],
   ),
 ];

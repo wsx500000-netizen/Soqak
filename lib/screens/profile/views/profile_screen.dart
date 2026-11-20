@@ -17,7 +17,7 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         children: [
           ProfileCard(
-            name: "Sepide",
+            name: "سارة",
             email: "theflutterway@gmail.com",
             imageSrc: "https://i.imgur.com/IXnwbLk.png",
             // proLableText: "Sliver",
@@ -42,44 +42,44 @@ class ProfileScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
             child: Text(
-              "Account",
+              "الحساب",
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           const SizedBox(height: defaultPadding / 2),
           ProfileMenuListTile(
-            text: "Orders",
+            text: "الطلبات",
             svgSrc: "assets/icons/Order.svg",
             press: () {
               Navigator.pushNamed(context, ordersScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "Returns",
+            text: "المرتجعات",
             svgSrc: "assets/icons/Return.svg",
             press: () {},
           ),
           ProfileMenuListTile(
-            text: "Wishlist",
+            text: "المفضلة",
             svgSrc: "assets/icons/Wishlist.svg",
             press: () {},
           ),
           ProfileMenuListTile(
-            text: "Addresses",
+            text: "العناوين",
             svgSrc: "assets/icons/Address.svg",
             press: () {
               Navigator.pushNamed(context, addressesScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "Payment",
+            text: "الدفع",
             svgSrc: "assets/icons/card.svg",
             press: () {
               Navigator.pushNamed(context, emptyPaymentScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "Wallet",
+            text: "المحفظة",
             svgSrc: "assets/icons/Wallet.svg",
             press: () {
               Navigator.pushNamed(context, walletScreenRoute);
@@ -90,20 +90,20 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: defaultPadding, vertical: defaultPadding / 2),
             child: Text(
-              "Personalization",
+              "التخصيص",
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           DividerListTileWithTrilingText(
             svgSrc: "assets/icons/Notification.svg",
-            title: "Notification",
-            trilingText: "Off",
+            title: "الإشعارات",
+            trilingText: "متوقف",
             press: () {
               Navigator.pushNamed(context, enableNotificationScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "Preferences",
+            text: "التفضيلات",
             svgSrc: "assets/icons/Preferences.svg",
             press: () {
               Navigator.pushNamed(context, preferencesScreenRoute);
@@ -114,19 +114,19 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: defaultPadding, vertical: defaultPadding / 2),
             child: Text(
-              "Settings",
+              "الإعدادات",
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           ProfileMenuListTile(
-            text: "Language",
+            text: "اللغة",
             svgSrc: "assets/icons/Language.svg",
             press: () {
               Navigator.pushNamed(context, selectLanguageScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "Location",
+            text: "الموقع",
             svgSrc: "assets/icons/Location.svg",
             press: () {},
           ),
@@ -135,19 +135,19 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
                 horizontal: defaultPadding, vertical: defaultPadding / 2),
             child: Text(
-              "Help & Support",
+              "المساعدة والدعم",
               style: Theme.of(context).textTheme.titleSmall,
             ),
           ),
           ProfileMenuListTile(
-            text: "Get Help",
+            text: "احصل على المساعدة",
             svgSrc: "assets/icons/Help.svg",
             press: () {
               Navigator.pushNamed(context, getHelpScreenRoute);
             },
           ),
           ProfileMenuListTile(
-            text: "FAQ",
+            text: "الأسئلة الشائعة",
             svgSrc: "assets/icons/FAQ.svg",
             press: () {},
             isShowDivider: false,
@@ -168,7 +168,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             title: const Text(
-              "Log Out",
+              "تسجيل الخروج",
               style: TextStyle(color: errorColor, fontSize: 14, height: 1),
             ),
           )

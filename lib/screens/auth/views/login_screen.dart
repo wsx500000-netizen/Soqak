@@ -32,18 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome back!",
+                    "مرحباً بعودتك!",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: defaultPadding / 2),
                   const Text(
-                    "Log in with your data that you intered during your registration.",
+                    "سجّل الدخول باستخدام بياناتك المسجلة.",
                   ),
                   const SizedBox(height: defaultPadding),
                   LogInForm(formKey: _formKey),
                   Align(
                     child: TextButton(
-                      child: const Text("Forgot password"),
+                      child: const Text("نسيت كلمة المرور؟"),
                       onPressed: () {
                         Navigator.pushNamed(
                             context, passwordRecoveryScreenRoute);
@@ -64,17 +64,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             ModalRoute.withName(logInScreenRoute));
                       }
                     },
-                    child: const Text("Log in"),
+                    child: const Text("تسجيل الدخول"),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account?"),
+                      const Text("ليس لديك حساب؟"),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, signUpScreenRoute);
                         },
-                        child: const Text("Sign up"),
+                        child: const Text("إنشاء حساب"),
                       )
                     ],
                   ),
