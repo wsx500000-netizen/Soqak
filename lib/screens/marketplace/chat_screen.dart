@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop/services/local_database.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key, this.name = 'البائع'});
@@ -11,9 +12,51 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _controller = TextEditingController();
-  final List<String> _messages = [
-    'مرحباً، هل المنتج متوفر؟',
-  ];
+  List<Map<String, Object?>> _messages = [];
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    final db = await LocalDatabase.instance.database;
+    final rows = await db.query('chats',
+        where: 'name = ?', whereArgs: [widget.name], orderBy: 'id ASC');
+    if (!mounted) return;
+    if (rows.isEmpty) {
+      await db.insert('chats', {
+        'name': widget.name,
+        'text': 'مرحباً، هل المنتج متوفر؟',
+        'sentByMe': 1,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+      final seeded = await db.query('chats',
+          where: 'name = ?', whereArgs: [widget.name], orderBy: 'id ASC');
+      setState(() {
+        _messages = seeded;
+        _loaded = true;
+      });
+      return;
+    }
+    setState(() {
+      _messages = rows;
+      _loaded = true;
+    });
+  }
+
+  Future<void> _send(String text) async {
+    final db = await LocalDatabase.instance.database;
+    await db.insert('chats', {
+      'name': widget.name,
+      'text': text,
+      'sentByMe': 1,
+      'createdAt': DateTime.now().toIso8601String(),
+    });
+    await _loadMessages();
+  }
 
   @override
   void dispose() {
@@ -33,32 +76,36 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) => Align(
-                alignment: index.isEven
-                    ? AlignmentDirectional.centerEnd
-                    : AlignmentDirectional.centerStart,
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: index.isEven
-                        ? const Color(0xFF075E54)
-                        : const Color(0xFFF1F2F6),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    _messages[index],
-                    style: TextStyle(
-                      color: index.isEven ? Colors.white : Colors.black87,
+            child: !_loaded
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) => Align(
+                      alignment: _messages[index]['sentByMe'] == 1
+                          ? AlignmentDirectional.centerEnd
+                          : AlignmentDirectional.centerStart,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: _messages[index]['sentByMe'] == 1
+                              ? const Color(0xFF075E54)
+                              : const Color(0xFFF1F2F6),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Text(
+                          _messages[index]['text'] as String,
+                          style: TextStyle(
+                            color: _messages[index]['sentByMe'] == 1
+                                ? Colors.white
+                                : Colors.black87,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
           ),
           SafeArea(
             child: Padding(
@@ -79,9 +126,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       final text = _controller.text.trim();
                       if (text.isEmpty) return;
                       setState(() {
-                        _messages.add(text);
                         _controller.clear();
                       });
+                      _send(text);
                     },
                     icon: const Icon(Icons.send),
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shop/components/network_image_with_loader.dart';
 import 'package:shop/services/marketplace_state.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -18,9 +18,9 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final state = MarketplaceScope.of(context);
     final results = state.listings.where((listing) {
-      final matchesQuery =
-          _query.isEmpty || listing.title.contains(_query) ||
-              listing.category.contains(_query);
+      final matchesQuery = _query.isEmpty ||
+          listing.title.contains(_query) ||
+          listing.category.contains(_query);
       final matchesCategory =
           _category == 'الكل' || listing.category == _category;
       final matchesLocation =
@@ -67,8 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: ChoiceChip(
                       label: Text(category),
                       selected: _category == category,
-                      onSelected: (_) =>
-                          setState(() => _category = category),
+                      onSelected: (_) => setState(() => _category = category),
                     ),
                   ),
               ],
@@ -88,8 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Text(location),
                       ))
                   .toList(),
-              onChanged: (value) =>
-                  setState(() => _location = value ?? 'الكل'),
+              onChanged: (value) => setState(() => _location = value ?? 'الكل'),
             ),
           ),
           Expanded(
@@ -107,21 +105,17 @@ class _SearchScreenState extends State<SearchScreen> {
                           borderRadius: BorderRadius.circular(14),
                           side: const BorderSide(color: Color(0xFFE8E8E8)),
                         ),
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: listing.imageUrl,
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                          ),
+                        leading: NetworkImageWithLoader(
+                          listing.imageUrl,
+                          radius: 8,
+                          width: 64,
+                          height: 64,
                         ),
                         title: Text(listing.title),
                         subtitle:
                             Text('${listing.location} • ${listing.price} ر.س'),
                         trailing: IconButton(
-                          onPressed: () =>
-                              state.toggleFavorite(listing.id),
+                          onPressed: () => state.toggleFavorite(listing.id),
                           icon: Icon(
                             state.favoriteIds.contains(listing.id)
                                 ? Icons.favorite

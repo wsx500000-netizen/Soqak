@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shop/components/network_image_with_loader.dart';
+import 'package:shop/models/listing_model.dart';
 import 'package:shop/services/marketplace_state.dart';
+import 'package:shop/services/supabase_service.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -8,15 +10,12 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = MarketplaceScope.of(context);
-    final listings = state.cart.keys.map((id) {
-      return state.listings.firstWhere(
-        (listing) => listing.id == id,
-        orElse: () => state.myListings.firstWhere(
-          (listing) => listing.id == id,
-          orElse: () => state.listings.first,
-        ),
-      );
-    }).toList();
+    final listings = state.cart.keys
+        .map((id) {
+          return state.listingById(id);
+        })
+        .whereType<ListingModel>()
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -55,19 +54,18 @@ class CartScreen extends StatelessWidget {
                         child: ListTile(
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: CachedNetworkImage(
-                              imageUrl: listing.imageUrl,
+                            child: NetworkImageWithLoader(
+                              listing.imageUrl,
+                              radius: 8,
                               width: 58,
                               height: 58,
-                              fit: BoxFit.cover,
                             ),
                           ),
                           title: Text(listing.title),
                           subtitle: Text(
                               '${listing.price * quantity} ر.س × $quantity'),
                           trailing: IconButton(
-                            onPressed: () =>
-                                state.removeFromCart(listing.id),
+                            onPressed: () => state.removeFromCart(listing.id),
                             icon: const Icon(Icons.delete_outline,
                                 color: Colors.red),
                           ),
@@ -102,13 +100,27 @@ class CartScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          try {
+                            await state.placeOrder();
+                          } catch (error) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'تعذر إنشاء الطلب. سجّل الدخول وحاول مجددًا.'),
+                              ),
+                            );
+                            return;
+                          }
+                          if (!context.mounted) return;
                           showDialog<void>(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: const Text('تم تأكيد الطلب تجريبياً'),
-                              content: const Text(
-                                  'هذه عملية دفع تجريبية ولا يتم خصم أي مبلغ حقيقي.'),
+                              title: const Text('تم تأكيد الطلب'),
+                              content: Text(SupabaseService.isConfigured
+                                  ? 'تم حفظ الطلب في حسابك. الدفع الإلكتروني غير مفعّل.'
+                                  : 'تم حفظ الطلب محلياً على الجهاز.'),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),

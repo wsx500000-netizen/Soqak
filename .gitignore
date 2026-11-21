@@ -9,6 +9,12 @@
 .history
 .svn/
 
+# Android release signing secrets
+android/key.properties
+android/*.jks
+android/*.keystore
+android/release/
+
 # IntelliJ related
 *.iml
 *.ipr

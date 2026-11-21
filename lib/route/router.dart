@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop/entry_point.dart';
 import 'package:shop/screens/marketplace/add_listing_screen.dart';
 import 'package:shop/screens/marketplace/chat_screen.dart';
+import 'package:shop/screens/admin/admin_dashboard_screen.dart';
 
 import 'screen_export.dart';
 
@@ -73,6 +74,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case chatScreenRoute:
       return MaterialPageRoute(
         builder: (context) => const ChatScreen(),
+      );
+    case adminDashboardScreenRoute:
+      return MaterialPageRoute(
+        builder: (context) => const AdminDashboardScreen(),
       );
     case onbordingScreenRoute:
       return MaterialPageRoute(

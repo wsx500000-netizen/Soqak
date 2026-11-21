@@ -4,6 +4,7 @@ import 'package:shop/components/list_tile/divider_list_tile.dart';
 import 'package:shop/components/network_image_with_loader.dart';
 import 'package:shop/constants.dart';
 import 'package:shop/route/screen_export.dart';
+import 'package:shop/services/supabase_service.dart';
 
 import 'components/profile_card.dart';
 import 'components/profile_menu_item_list_tile.dart';
@@ -66,6 +67,13 @@ class ProfileScreen extends StatelessWidget {
             svgSrc: "assets/icons/Chat.svg",
             press: () {
               Navigator.pushNamed(context, chatScreenRoute);
+            },
+          ),
+          ProfileMenuListTile(
+            text: "لوحة المشرف",
+            svgSrc: "assets/icons/Preferences.svg",
+            press: () {
+              Navigator.pushNamed(context, adminDashboardScreenRoute);
             },
           ),
           ProfileMenuListTile(
@@ -170,7 +178,17 @@ class ProfileScreen extends StatelessWidget {
 
           // Log Out
           ListTile(
-            onTap: () {},
+            onTap: () async {
+              if (SupabaseService.isConfigured) {
+                await SupabaseService.signOut();
+                if (!context.mounted) return;
+              }
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                logInScreenRoute,
+                (route) => false,
+              );
+            },
             minLeadingWidth: 24,
             leading: SvgPicture.asset(
               "assets/icons/Logout.svg",

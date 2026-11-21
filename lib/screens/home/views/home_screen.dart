@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shop/components/network_image_with_loader.dart';
 import 'package:shop/constants.dart';
 import 'package:shop/models/listing_model.dart';
 import 'package:shop/route/route_constants.dart';
@@ -21,8 +21,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            Navigator.pushNamed(context, addListingScreenRoute),
+        onPressed: () => Navigator.pushNamed(context, addListingScreenRoute),
         icon: const Icon(Icons.add),
         label: const Text('إضافة إعلان'),
       ),
@@ -167,13 +166,9 @@ class _ListingCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: listing.imageUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) =>
-                        const ColoredBox(color: Color(0xFFF1F2F6)),
-                    errorWidget: (_, __, ___) =>
-                        const ColoredBox(color: Color(0xFFF1F2F6)),
+                  NetworkImageWithLoader(
+                    listing.imageUrl,
+                    radius: 0,
                   ),
                   Positioned(
                     top: 6,
@@ -185,9 +180,7 @@ class _ListingCard extends StatelessWidget {
                         visualDensity: VisualDensity.compact,
                         onPressed: () => state.toggleFavorite(listing.id),
                         icon: Icon(
-                          isFavorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: isFavorite ? Colors.red : Colors.black54,
                         ),
                       ),
@@ -254,11 +247,11 @@ class _ListingCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: CachedNetworkImage(
-                  imageUrl: listing.imageUrl,
+                child: NetworkImageWithLoader(
+                  listing.imageUrl,
+                  radius: 14,
                   height: 220,
                   width: double.infinity,
-                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(height: 16),

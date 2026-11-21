@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 import '../../models/listing_model.dart';
 import '../../services/marketplace_state.dart';
+import '../../services/supabase_service.dart';
 
 class AddListingScreen extends StatefulWidget {
   const AddListingScreen({super.key});
@@ -17,6 +23,10 @@ class _AddListingScreenState extends State<AddListingScreen> {
   final _location = TextEditingController();
   final _description = TextEditingController();
   String _category = 'هواتف';
+  String _imageUrl =
+      'https://images.unsplash.com/photo-1472851294608-062f824d29cc';
+  bool _isPickingImage = false;
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
@@ -41,19 +51,55 @@ class _AddListingScreenState extends State<AddListingScreen> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            Container(
-              height: 170,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F4F6),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add_a_photo_outlined, size: 40),
-                  SizedBox(height: 8),
-                  Text('إضافة صور الإعلان'),
-                ],
+            InkWell(
+              onTap: _isPickingImage
+                  ? null
+                  : () async {
+                      setState(() => _isPickingImage = true);
+                      try {
+                        final file = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 85,
+                        );
+                        if (!mounted) return;
+                        setState(() {
+                          if (file != null) _imageUrl = file.path;
+                        });
+                      } catch (error) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('تعذر فتح معرض الصور. حاول مجددًا.'),
+                          ),
+                        );
+                      } finally {
+                        if (mounted) {
+                          setState(() => _isPickingImage = false);
+                        }
+                      }
+                    },
+              child: Container(
+                height: 170,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: _isPickingImage
+                    ? const Center(child: CircularProgressIndicator())
+                    : _imageUrl.startsWith('/')
+                        ? Image.file(File(_imageUrl),
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                const Center(child: Icon(Icons.image)))
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.add_a_photo_outlined, size: 40),
+                              SizedBox(height: 8),
+                              Text('إضافة صور الإعلان'),
+                            ],
+                          ),
               ),
             ),
             const SizedBox(height: 20),
@@ -92,8 +138,9 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 labelText: 'السعر',
                 suffixText: 'ر.س',
               ),
-              validator: (value) =>
-                  int.tryParse(value ?? '') == null ? 'أدخل سعراً صحيحاً' : null,
+              validator: (value) => int.tryParse(value ?? '') == null
+                  ? 'أدخل سعراً صحيحاً'
+                  : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -113,29 +160,67 @@ class _AddListingScreenState extends State<AddListingScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {
-                if (!_formKey.currentState!.validate()) return;
-                final listing = ListingModel(
-                  id: 'listing-${DateTime.now().millisecondsSinceEpoch}',
-                  title: _title.text.trim(),
-                  category: _category,
-                  location: _location.text.trim(),
-                  price: int.parse(_price.text),
-                  description: _description.text.trim(),
-                  imageUrl:
-                      'https://images.unsplash.com/photo-1472851294608-062f824d29cc',
-                );
-                MarketplaceScope.of(context).addListing(listing);
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تم نشر إعلانك بنجاح')),
-                );
-              },
-              child: const Text('نشر الإعلان'),
+              onPressed: _isSubmitting
+                  ? null
+                  : () async {
+                      if (!_formKey.currentState!.validate()) return;
+                      final marketplace = MarketplaceScope.of(context);
+                      setState(() => _isSubmitting = true);
+                      try {
+                        var imageUrl = _imageUrl;
+                        if (_imageUrl.startsWith('/')) {
+                          if (SupabaseService.isConfigured) {
+                            imageUrl = await SupabaseService.uploadListingImage(
+                                _imageUrl);
+                          } else {
+                            imageUrl = await _saveImageLocally(_imageUrl);
+                          }
+                        }
+                        final listing = ListingModel(
+                          id: 'listing-${DateTime.now().microsecondsSinceEpoch}',
+                          title: _title.text.trim(),
+                          category: _category,
+                          location: _location.text.trim(),
+                          price: int.parse(_price.text),
+                          description: _description.text.trim(),
+                          imageUrl: imageUrl,
+                        );
+                        await marketplace.addListing(listing);
+                      } catch (error) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'تعذر إرسال الإعلان. تحقق من اتصالك وحاول مجددًا.'),
+                          ),
+                        );
+                        return;
+                      } finally {
+                        if (mounted) setState(() => _isSubmitting = false);
+                      }
+                      if (!mounted) return;
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text('تم إرسال إعلانك للمراجعة قبل النشر')),
+                      );
+                    },
+              child: Text(_isSubmitting ? 'جارٍ الإرسال...' : 'إرسال للمراجعة'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<String> _saveImageLocally(String sourcePath) async {
+    final documents = await getApplicationDocumentsDirectory();
+    final images = Directory(path.join(documents.path, 'listing-images'));
+    await images.create(recursive: true);
+    final extension = path.extension(sourcePath);
+    final fileName =
+        '${DateTime.now().microsecondsSinceEpoch}${extension.isEmpty ? '.jpg' : extension}';
+    return (await File(sourcePath).copy(path.join(images.path, fileName))).path;
   }
 }

@@ -1,10 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="180" height="48" viewBox="0 0 180 48">
-  <g fill="none" fill-rule="evenodd">
-    <rect width="48" height="48" rx="14" fill="#075E54"/>
-    <path d="M14 18h20l-2.2 17H16.2L14 18Z" fill="#FFFFFF"/>
-    <path d="M19 18c0-5.2 3.1-8 5.9-8 2.9 0 5.9 2.8 5.9 8" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-    <circle cx="21" cy="31" r="1.8" fill="#075E54"/>
-    <circle cx="27.5" cy="31" r="1.8" fill="#075E54"/>
-  </g>
-  <text x="60" y="33" fill="#075E54" font-family="Arial, sans-serif" font-size="29" font-weight="700">سوقك</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="196" height="52" viewBox="0 0 196 52">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#118A86"/>
+      <stop offset="1" stop-color="#0B5D5B"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="48" height="48" rx="15" fill="url(#brand)"/>
+  <path d="M13.5 24a12 12 0 0 1 20-8" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="m29.5 12.5 5.2 2.4-4.8 3.2Z" fill="#F2B544"/>
+  <path d="M36.5 28a12 12 0 0 1-20 8" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="m20.5 39.5-5.2-2.4 4.8-3.2Z" fill="#F2B544"/>
+  <circle cx="25" cy="26" r="2.2" fill="#fff"/>
+  <text x="64" y="36" fill="#0B5D5B" font-family="Arial, 'Noto Sans Arabic', sans-serif" font-size="31" font-weight="800">سوقك</text>
+  <circle cx="183" cy="26" r="4" fill="#F2B544"/>
 </svg>

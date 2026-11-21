@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shop/constants.dart';
 import 'package:shop/route/route_constants.dart';
+import 'package:shop/services/local_database.dart';
+import 'package:shop/services/supabase_service.dart';
 
 import 'components/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.redirectRoute});
+
+  final String? redirectRoute;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -13,6 +17,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _email = '';
+  String _password = '';
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     "سجّل الدخول باستخدام بياناتك المسجلة.",
                   ),
                   const SizedBox(height: defaultPadding),
-                  LogInForm(formKey: _formKey),
+                  LogInForm(
+                    formKey: _formKey,
+                    onEmailSaved: (email) => _email = email?.trim() ?? '',
+                    onPasswordSaved: (password) => _password = password ?? '',
+                  ),
                   Align(
                     child: TextButton(
                       child: const Text("نسيت كلمة المرور؟"),
@@ -51,20 +62,59 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: size.height > 700
-                        ? size.height * 0.1
-                        : defaultPadding,
+                    height:
+                        size.height > 700 ? size.height * 0.1 : defaultPadding,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            entryPointScreenRoute,
-                            ModalRoute.withName(logInScreenRoute));
-                      }
-                    },
-                    child: const Text("تسجيل الدخول"),
+                    onPressed: _isSubmitting
+                        ? null
+                        : () async {
+                            if (!_formKey.currentState!.validate()) return;
+                            _formKey.currentState!.save();
+                            setState(() => _isSubmitting = true);
+                            final bool authenticated;
+                            try {
+                              authenticated = SupabaseService.isConfigured
+                                  ? await SupabaseService.signIn(
+                                      _email, _password)
+                                  : await LocalDatabase.instance
+                                      .authenticateLocalUser(_email, _password);
+                            } catch (error) {
+                              if (!mounted) return;
+                              setState(() => _isSubmitting = false);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('تعذر تسجيل الدخول. حاول مجددًا.'),
+                                ),
+                              );
+                              return;
+                            } finally {
+                              _password = '';
+                            }
+                            if (!mounted) return;
+                            setState(() => _isSubmitting = false);
+                            if (!authenticated) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'بيانات الدخول غير صحيحة أو الحساب موقوف'),
+                                ),
+                              );
+                              return;
+                            }
+                            if (widget.redirectRoute != null) {
+                              Navigator.pushReplacementNamed(
+                                  context, widget.redirectRoute!);
+                            } else {
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  entryPointScreenRoute,
+                                  ModalRoute.withName(logInScreenRoute));
+                            }
+                          },
+                    child:
+                        Text(_isSubmitting ? "جارٍ التحقق..." : "تسجيل الدخول"),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

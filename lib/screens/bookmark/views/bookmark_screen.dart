@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shop/components/network_image_with_loader.dart';
 import 'package:shop/services/marketplace_state.dart';
 
 class BookmarkScreen extends StatelessWidget {
@@ -43,9 +43,9 @@ class BookmarkScreen extends StatelessWidget {
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: listing.imageUrl,
-                              fit: BoxFit.cover,
+                            NetworkImageWithLoader(
+                              listing.imageUrl,
+                              radius: 0,
                             ),
                             Positioned(
                               left: 6,

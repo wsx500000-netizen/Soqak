@@ -15,7 +15,7 @@ const grandisExtendedFont = "Grandis Extended";
 
 // On color 80, 60.... those means opacity
 
-const Color primaryColor = Color(0xFF075E54);
+const Color primaryColor = Color(0xFF0B5D5B);
 
 const MaterialColor primaryMaterialColor =
     MaterialColor(0xFF075E54, <int, Color>{

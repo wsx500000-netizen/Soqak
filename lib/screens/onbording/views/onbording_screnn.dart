@@ -28,8 +28,7 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
       image: "assets/Illustration/Illustration-1.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_1.png",
       title: "املأ حقيبة \nالتسوق",
-      description:
-          "أضف أي منتج إلى سلتك أو احفظه في المفضلة حتى لا تفوته.",
+      description: "أضف أي منتج إلى سلتك أو احفظه في المفضلة حتى لا تفوته.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-2.png",
@@ -41,8 +40,7 @@ class _OnBordingScreenState extends State<OnBordingScreen> {
       image: "assets/Illustration/Illustration-3.png",
       imageDarkTheme: "assets/Illustration/Illustration_darkTheme_3.png",
       title: "تتبع الطلبات",
-      description:
-          "تتبع طلباتك وشحناتك بكل سهولة في أي وقت.",
+      description: "تتبع طلباتك وشحناتك بكل سهولة في أي وقت.",
     ),
     Onbord(
       image: "assets/Illustration/Illustration-4.png",

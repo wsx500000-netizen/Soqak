@@ -1,7 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:shop/services/local_database.dart';
+import 'package:shop/services/supabase_service.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
+
+  @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  late Future<List<Map<String, Object?>>> _orders;
+
+  @override
+  void initState() {
+    super.initState();
+    _orders = _loadOrders();
+  }
+
+  Future<List<Map<String, Object?>>> _loadOrders() async {
+    if (SupabaseService.isConfigured) {
+      return SupabaseService.loadOrders();
+    }
+    final db = await LocalDatabase.instance.database;
+    return db.query('orders', orderBy: 'createdAt DESC');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,23 +35,35 @@ class OrdersScreen extends StatelessWidget {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _OrderCard(
-            title: 'آيفون 15 برو 256 جيجا',
-            status: 'قيد التوصيل',
-            date: 'اليوم',
-            color: const Color(0xFF075E54),
-          ),
-          const SizedBox(height: 12),
-          _OrderCard(
-            title: 'ساعة أبل ووتش سيريس 9',
-            status: 'تم التسليم',
-            date: 'قبل 3 أيام',
-            color: Colors.green,
-          ),
-        ],
+      body: FutureBuilder<List<Map<String, Object?>>>(
+        future: _orders,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return const Center(child: Text('تعذر تحميل الطلبات'));
+          }
+          final rows = snapshot.data!;
+          if (rows.isEmpty) {
+            return const Center(child: Text('لا توجد طلبات بعد'));
+          }
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: rows.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            itemBuilder: (_, index) {
+              final row = rows[index];
+              return _OrderCard(
+                title: row['title'] as String,
+                status: row['status'] as String,
+                date:
+                    'إجمالي الطلب: ${row['total']} ر.س · ${row[SupabaseService.isConfigured ? 'created_at' : 'createdAt']}',
+                color: const Color(0xFF0B5D5B),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -74,8 +109,8 @@ class _OrderCard extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(status,
-                    style: TextStyle(color: color, fontSize: 12)),
+                child:
+                    Text(status, style: TextStyle(color: color, fontSize: 12)),
               ),
             ],
           ),
